@@ -17,7 +17,9 @@ import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedQuickstoreRouteImport } from './routes/_authenticated/quickstore'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedStoreProjectIdRouteImport } from './routes/_authenticated/store.$projectId'
 
 const TemplatesRoute = TemplatesRouteImport.update({
   id: '/templates',
@@ -58,11 +60,22 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedQuickstoreRoute = AuthenticatedQuickstoreRouteImport.update({
+  id: '/quickstore',
+  path: '/quickstore',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStoreProjectIdRoute =
+  AuthenticatedStoreProjectIdRouteImport.update({
+    id: '/store/$projectId',
+    path: '/store/$projectId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -73,6 +86,8 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/quickstore': typeof AuthenticatedQuickstoreRoute
+  '/store/$projectId': typeof AuthenticatedStoreProjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -83,6 +98,8 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/quickstore': typeof AuthenticatedQuickstoreRoute
+  '/store/$projectId': typeof AuthenticatedStoreProjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -95,6 +112,8 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/quickstore': typeof AuthenticatedQuickstoreRoute
+  '/_authenticated/store/$projectId': typeof AuthenticatedStoreProjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -107,6 +126,8 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/templates'
     | '/dashboard'
+    | '/quickstore'
+    | '/store/$projectId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -117,6 +138,8 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/templates'
     | '/dashboard'
+    | '/quickstore'
+    | '/store/$projectId'
   id:
     | '__root__'
     | '/'
@@ -128,6 +151,8 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/templates'
     | '/_authenticated/dashboard'
+    | '/_authenticated/quickstore'
+    | '/_authenticated/store/$projectId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -199,6 +224,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/quickstore': {
+      id: '/_authenticated/quickstore'
+      path: '/quickstore'
+      fullPath: '/quickstore'
+      preLoaderRoute: typeof AuthenticatedQuickstoreRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -206,15 +238,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/store/$projectId': {
+      id: '/_authenticated/store/$projectId'
+      path: '/store/$projectId'
+      fullPath: '/store/$projectId'
+      preLoaderRoute: typeof AuthenticatedStoreProjectIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedQuickstoreRoute: typeof AuthenticatedQuickstoreRoute
+  AuthenticatedStoreProjectIdRoute: typeof AuthenticatedStoreProjectIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedQuickstoreRoute: AuthenticatedQuickstoreRoute,
+  AuthenticatedStoreProjectIdRoute: AuthenticatedStoreProjectIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

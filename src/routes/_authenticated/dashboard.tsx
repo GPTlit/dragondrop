@@ -98,6 +98,25 @@ function DashboardPage() {
 
             <Stats stats={statsQ.data} loading={statsQ.isLoading} projects={projectsQ.data?.length ?? 0} />
 
+            <Link
+              to="/quickstore"
+              className="group flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-gradient-to-br from-foreground to-foreground/90 p-6 text-background transition-transform hover:scale-[1.005]"
+            >
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-background/15">
+                  <ShoppingBag className="h-6 w-6" />
+                </div>
+                <div>
+                  <p className="font-display text-lg font-semibold">QuickStore — for the lazy founder</p>
+                  <p className="text-sm text-background/70">Skip the builder. One click → full store + admin panel, ready to sell.</p>
+                </div>
+              </div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-background px-4 py-2 text-xs font-semibold text-foreground">
+                <Sparkles className="h-3.5 w-3.5" /> Launch in 10s
+              </span>
+            </Link>
+
+
             <Projects
               loading={projectsQ.isLoading}
               projects={projectsQ.data ?? []}
@@ -269,13 +288,23 @@ function Projects({
             >
               {p.is_published ? "Unpublish" : "Publish"}
             </button>
-            <Link
-              to="/builder"
-              search={{ project: p.id } as any}
-              className="rounded-lg bg-foreground px-3 py-1.5 text-xs font-semibold text-background"
-            >
-              Open
-            </Link>
+            {p.type === "store" ? (
+              <Link
+                to="/store/$projectId"
+                params={{ projectId: p.id }}
+                className="rounded-lg bg-foreground px-3 py-1.5 text-xs font-semibold text-background"
+              >
+                Admin
+              </Link>
+            ) : (
+              <Link
+                to="/builder"
+                search={{ project: p.id } as any}
+                className="rounded-lg bg-foreground px-3 py-1.5 text-xs font-semibold text-background"
+              >
+                Open
+              </Link>
+            )}
             <button
               onClick={() => {
                 if (confirm(`Delete "${p.name}"?`)) onDelete(p.id);
