@@ -138,7 +138,7 @@ function PricingPage() {
                       )}
                     </div>
                     <Link
-                      to="/signup"
+                      to="/auth"
                       className={`mt-5 rounded-xl px-4 py-2.5 text-center text-sm font-semibold ${
                         p.featured ? "bg-background text-foreground" : "bg-foreground text-background"
                       }`}
@@ -195,7 +195,7 @@ function PricingPage() {
           <div className="mx-auto max-w-3xl px-4 text-center">
             <h2 className="font-display text-3xl font-semibold tracking-tight">Questions about Enterprise?</h2>
             <p className="mt-3 text-muted-foreground">Custom contracts, dedicated CSM, advanced security and procurement.</p>
-            <Link to="/signup" className="mt-6 inline-block rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background">
+            <Link to="/auth" className="mt-6 inline-block rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background">
               Talk to sales
             </Link>
           </div>

@@ -665,7 +665,7 @@ function Pricing() {
                 <span className={p.featured ? "text-background/60" : "text-muted-foreground"}>{p.sub}</span>
               </div>
               <Link
-                to="/signup"
+                to="/auth"
                 className={`mt-6 rounded-xl px-4 py-3 text-center text-sm font-semibold transition-all ${
                   p.featured
                     ? "bg-background text-foreground hover:opacity-90"
@@ -795,7 +795,7 @@ function CTA() {
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              to="/signup"
+              to="/auth"
               className="inline-flex items-center gap-2 rounded-full bg-background px-6 py-3.5 text-sm font-semibold text-foreground transition-all hover:opacity-90"
             >
               Start building free <ArrowRight className="h-4 w-4" />
