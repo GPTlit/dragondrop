@@ -269,13 +269,23 @@ function Projects({
             >
               {p.is_published ? "Unpublish" : "Publish"}
             </button>
-            <Link
-              to="/builder"
-              search={{ project: p.id } as any}
-              className="rounded-lg bg-foreground px-3 py-1.5 text-xs font-semibold text-background"
-            >
-              Open
-            </Link>
+            {p.type === "store" ? (
+              <Link
+                to="/store/$projectId"
+                params={{ projectId: p.id }}
+                className="rounded-lg bg-foreground px-3 py-1.5 text-xs font-semibold text-background"
+              >
+                Admin
+              </Link>
+            ) : (
+              <Link
+                to="/builder"
+                search={{ project: p.id } as any}
+                className="rounded-lg bg-foreground px-3 py-1.5 text-xs font-semibold text-background"
+              >
+                Open
+              </Link>
+            )}
             <button
               onClick={() => {
                 if (confirm(`Delete "${p.name}"?`)) onDelete(p.id);
