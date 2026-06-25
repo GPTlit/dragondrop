@@ -815,3 +815,63 @@ function CTA() {
     </section>
   );
 }
+
+function QuickStoreSection() {
+  return (
+    <section className="border-t border-border bg-foreground py-24 text-background">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full border border-background/20 px-3 py-1 text-xs font-medium">
+              <ShoppingBag className="h-3.5 w-3.5" /> QuickStore — for the lazy
+            </span>
+            <h2 className="mt-5 font-display text-4xl font-semibold tracking-tight sm:text-5xl">
+              Want a store but hate building?
+            </h2>
+            <p className="mt-4 max-w-lg text-background/70">
+              One click. You get a Shopify-style store, a full admin panel just for you, product uploads with images, inventory, and a ready storefront. No drag, no drop, no thinking.
+            </p>
+            <ul className="mt-6 space-y-2 text-sm">
+              {[
+                "Pre-built storefront page",
+                "Private admin UI — only you can see it",
+                "Upload product images, set prices & stock",
+                "Publish with one toggle",
+              ].map((x) => (
+                <li key={x} className="flex items-center gap-2"><Check className="h-4 w-4" /> {x}</li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/auth" className="inline-flex items-center gap-2 rounded-full bg-background px-5 py-3 text-sm font-semibold text-foreground">
+                <Sparkles className="h-4 w-4" /> Launch my store
+              </Link>
+              <Link to="/auth" className="inline-flex items-center gap-2 rounded-full border border-background/30 px-5 py-3 text-sm font-semibold">
+                Sign in <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-background/15 bg-background/5 p-6">
+            <div className="rounded-xl bg-background p-4 text-foreground">
+              <div className="flex items-center justify-between border-b border-border pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="h-6 w-6 rounded-md bg-foreground" />
+                  <p className="text-sm font-semibold">My Store · Admin</p>
+                </div>
+                <span className="rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-semibold text-success">Published</span>
+              </div>
+              <div className="mt-3 grid grid-cols-3 gap-2">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="rounded-lg border border-border p-2">
+                    <div className="aspect-square rounded-md bg-secondary" />
+                    <p className="mt-1.5 truncate text-[11px] font-medium">Product {i}</p>
+                    <p className="text-[10px] text-muted-foreground">${(i * 12).toFixed(2)}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
