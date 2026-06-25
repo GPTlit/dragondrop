@@ -11,11 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as SignupRouteImport } from './routes/signup'
 import { Route as PricingRouteImport } from './routes/pricing'
-import { Route as LoginRouteImport } from './routes/login'
 import { Route as FeaturesRouteImport } from './routes/features'
-import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -29,29 +26,14 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PricingRoute = PricingRouteImport.update({
   id: '/pricing',
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FeaturesRoute = FeaturesRouteImport.update({
   id: '/features',
   path: '/features',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BuilderRoute = BuilderRouteImport.update({
@@ -68,22 +50,16 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/builder': typeof BuilderRoute
-  '/dashboard': typeof DashboardRoute
   '/features': typeof FeaturesRoute
-  '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
-  '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/builder': typeof BuilderRoute
-  '/dashboard': typeof DashboardRoute
   '/features': typeof FeaturesRoute
-  '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
-  '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
 }
@@ -91,11 +67,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/builder': typeof BuilderRoute
-  '/dashboard': typeof DashboardRoute
   '/features': typeof FeaturesRoute
-  '/login': typeof LoginRoute
   '/pricing': typeof PricingRoute
-  '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/templates': typeof TemplatesRoute
 }
@@ -104,33 +77,24 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/builder'
-    | '/dashboard'
     | '/features'
-    | '/login'
     | '/pricing'
-    | '/signup'
     | '/sitemap.xml'
     | '/templates'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/builder'
-    | '/dashboard'
     | '/features'
-    | '/login'
     | '/pricing'
-    | '/signup'
     | '/sitemap.xml'
     | '/templates'
   id:
     | '__root__'
     | '/'
     | '/builder'
-    | '/dashboard'
     | '/features'
-    | '/login'
     | '/pricing'
-    | '/signup'
     | '/sitemap.xml'
     | '/templates'
   fileRoutesById: FileRoutesById
@@ -138,11 +102,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BuilderRoute: typeof BuilderRoute
-  DashboardRoute: typeof DashboardRoute
   FeaturesRoute: typeof FeaturesRoute
-  LoginRoute: typeof LoginRoute
   PricingRoute: typeof PricingRoute
-  SignupRoute: typeof SignupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TemplatesRoute: typeof TemplatesRoute
 }
@@ -163,13 +124,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pricing': {
       id: '/pricing'
       path: '/pricing'
@@ -177,25 +131,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/features': {
       id: '/features'
       path: '/features'
       fullPath: '/features'
       preLoaderRoute: typeof FeaturesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/builder': {
@@ -218,11 +158,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BuilderRoute: BuilderRoute,
-  DashboardRoute: DashboardRoute,
   FeaturesRoute: FeaturesRoute,
-  LoginRoute: LoginRoute,
   PricingRoute: PricingRoute,
-  SignupRoute: SignupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TemplatesRoute: TemplatesRoute,
 }
