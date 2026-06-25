@@ -134,7 +134,7 @@ function FeaturesPage() {
             <h2 className="font-display text-4xl font-semibold tracking-tight">Ready to build?</h2>
             <p className="mt-3 text-muted-foreground">Start free. Upgrade only when you ship.</p>
             <div className="mt-6 flex justify-center gap-3">
-              <Link to="/signup" className="rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background">
+              <Link to="/auth" className="rounded-full bg-foreground px-6 py-3 text-sm font-semibold text-background">
                 Start free
               </Link>
               <Link to="/pricing" className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground">

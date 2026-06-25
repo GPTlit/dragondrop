@@ -1,25 +1,66 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { ArrowRight, Eye, EyeOff } from "lucide-react";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { ArrowRight, Eye, EyeOff, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/site/Logo";
 
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Sign in — DRAG-N-DROP" },
-      { name: "description", content: "Sign in to your DRAG-N-DROP workspace." },
+      { name: "description", content: "Sign in or create your DRAG-N-DROP account." },
     ],
   }),
-  component: LoginPage,
+  component: AuthPage,
 });
 
-function LoginPage() {
-  return <AuthForm mode="signin" />;
-}
-
-export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
+function AuthPage() {
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
   const [show, setShow] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) navigate({ to: "/dashboard" });
+    });
+  }, [navigate]);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (busy) return;
+    setBusy(true);
+    try {
+      if (mode === "signup") {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/dashboard`,
+            data: { full_name: fullName || email.split("@")[0] },
+          },
+        });
+        if (error) throw error;
+        toast.success("Account created. Welcome!");
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        toast.success("Signed in.");
+      }
+      navigate({ to: "/dashboard" });
+    } catch (err: any) {
+      toast.error(err?.message ?? "Authentication failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   const isSignup = mode === "signup";
+
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       <div className="flex flex-col p-6 sm:p-10">
@@ -29,36 +70,17 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
             {isSignup ? "Create your account" : "Welcome back"}
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {isSignup ? "Start building free. No credit card required." : "Sign in to continue building."}
+            {isSignup ? "Start building free. No credit card." : "Sign in to continue building."}
           </p>
 
-          <div className="mt-7 grid gap-2">
-            {[
-              ["Google", "#4285F4"],
-              ["Apple", "#1C1C1C"],
-              ["GitHub", "#24292e"],
-              ["Facebook", "#1877F2"],
-            ].map(([name, color]) => (
-              <button
-                key={name as string}
-                className="flex items-center justify-center gap-2 rounded-lg border border-border bg-background px-4 py-2.5 text-sm font-medium hover:bg-secondary"
-              >
-                <span className="inline-block h-4 w-4 rounded-full" style={{ background: color as string }} />
-                Continue with {name as string}
-              </button>
-            ))}
-          </div>
-
-          <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
-            <div className="h-px flex-1 bg-border" /> or <div className="h-px flex-1 bg-border" />
-          </div>
-
-          <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
+          <form className="mt-8 space-y-3" onSubmit={submit}>
             {isSignup && (
               <div>
                 <label className="text-xs font-medium text-muted-foreground">Full name</label>
                 <input
                   type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
                   placeholder="Maya Patel"
                   className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-foreground"
                 />
@@ -68,6 +90,9 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
               <label className="text-xs font-medium text-muted-foreground">Email</label>
               <input
                 type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@company.com"
                 className="mt-1 w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-foreground"
               />
@@ -77,7 +102,11 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
               <div className="relative mt-1">
                 <input
                   type={show ? "text" : "password"}
-                  placeholder="•••••••••"
+                  required
+                  minLength={6}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="At least 6 characters"
                   className="w-full rounded-lg border border-border bg-background px-3 py-2.5 pr-9 text-sm outline-none focus:border-foreground"
                 />
                 <button
@@ -91,18 +120,22 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
             </div>
             <button
               type="submit"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-foreground px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90"
+              disabled={busy}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-foreground px-4 py-2.5 text-sm font-semibold text-background hover:opacity-90 disabled:opacity-60"
             >
-              {isSignup ? "Create account" : "Sign in"} <ArrowRight className="h-4 w-4" />
+              {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <>{isSignup ? "Create account" : "Sign in"} <ArrowRight className="h-4 w-4" /></>}
             </button>
           </form>
 
           <p className="mt-6 text-center text-xs text-muted-foreground">
-            {isSignup ? (
-              <>Already have an account? <Link to="/login" className="font-medium text-foreground hover:underline">Sign in</Link></>
-            ) : (
-              <>Don't have an account? <Link to="/signup" className="font-medium text-foreground hover:underline">Start free</Link></>
-            )}
+            {isSignup ? "Already have an account? " : "Don't have an account? "}
+            <button
+              type="button"
+              onClick={() => setMode(isSignup ? "signin" : "signup")}
+              className="font-medium text-foreground hover:underline"
+            >
+              {isSignup ? "Sign in" : "Start free"}
+            </button>
           </p>
         </div>
         <p className="text-center text-xs text-muted-foreground">
@@ -114,7 +147,6 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
         className="relative hidden overflow-hidden lg:block"
         style={{ background: "linear-gradient(135deg, #0a0a0c 0%, #111114 100%)" }}
       >
-        <div className="absolute inset-0 opacity-40" style={{ background: "var(--gradient-aurora)" }} />
         <div className="relative flex h-full flex-col justify-between p-12 text-background">
           <div />
           <div>
@@ -129,9 +161,7 @@ export function AuthForm({ mode }: { mode: "signin" | "signup" }) {
               </div>
             </div>
           </div>
-          <div className="flex gap-1 text-xs text-background/40">
-            <span>SOC 2 · GDPR · ISO 27001</span>
-          </div>
+          <div className="text-xs text-background/40">SOC 2 · GDPR · ISO 27001</div>
         </div>
       </div>
     </div>
