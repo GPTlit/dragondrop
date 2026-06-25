@@ -39,6 +39,8 @@ function LandingPage() {
         <BuilderShowcase />
         <FeatureGrid />
         <AISection />
+        <QuickStoreSection />
+
         <Templates />
         <Stats />
         <Pricing />
