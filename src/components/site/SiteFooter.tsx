@@ -85,13 +85,11 @@ export function SiteFooter() {
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} DRAG-N-DROP, Inc. Built with itself.</p>
+          <p>© {new Date().getFullYear()} DRAG-N-DROP · <span className="font-semibold text-foreground">Created by Salem & Co.</span></p>
           <div className="flex items-center gap-4">
-            <span>SOC 2 Type II</span>
-            <span className="h-1 w-1 rounded-full bg-border" />
-            <span>GDPR ready</span>
-            <span className="h-1 w-1 rounded-full bg-border" />
-            <span>ISO 27001</span>
+            <a href="https://wa.me/221710318199" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-full bg-success px-3 py-1 font-semibold text-white hover:opacity-90">
+              WhatsApp · +221 710318199
+            </a>
           </div>
         </div>
       </div>
