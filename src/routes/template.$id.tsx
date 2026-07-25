@@ -37,7 +37,7 @@ function PageErr() {
 }
 
 function TemplatePreview() {
-  const t = Route.useLoaderData();
+  const t = Route.useLoaderData() as ReturnType<typeof templateById> & object;
   const p = t.palette;
   const others = TEMPLATES.filter((x) => x.id !== t.id).slice(0, 3);
 
