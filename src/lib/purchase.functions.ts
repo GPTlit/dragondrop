@@ -42,13 +42,13 @@ export const submitPurchase = createServerFn({ method: "POST" })
       p_store_name: data.store_name,
       p_buyer_name: data.buyer_name,
       p_buyer_email: data.buyer_email,
-      p_buyer_code: data.buyer_code || null,
-      p_buyer_phone: data.buyer_phone || null,
-      p_buyer_whatsapp: data.buyer_whatsapp || null,
-      p_comments: data.comments || null,
+      p_buyer_code: data.buyer_code || "",
+      p_buyer_phone: data.buyer_phone || "",
+      p_buyer_whatsapp: data.buyer_whatsapp || "",
+      p_comments: data.comments || "",
       p_payment_method: data.payment_method,
-      p_receipt_url: data.receipt_url || null,
-    });
+      p_receipt_url: data.receipt_url || "",
+    } as any);
     if (error) throw new Error(error.message);
     const first = Array.isArray(row) ? row[0] : row;
     return { purchaseId: first?.purchase_id as string, projectId: first?.project_id as string };
