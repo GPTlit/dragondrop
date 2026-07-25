@@ -17,6 +17,8 @@ import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as TemplateIdRouteImport } from './routes/template.$id'
+import { Route as BuyIdRouteImport } from './routes/buy.$id'
 import { Route as AuthenticatedQuickstoreRouteImport } from './routes/_authenticated/quickstore'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedStoreProjectIdRouteImport } from './routes/_authenticated/store.$projectId'
@@ -60,6 +62,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TemplateIdRoute = TemplateIdRouteImport.update({
+  id: '/template/$id',
+  path: '/template/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuyIdRoute = BuyIdRouteImport.update({
+  id: '/buy/$id',
+  path: '/buy/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedQuickstoreRoute = AuthenticatedQuickstoreRouteImport.update({
   id: '/quickstore',
   path: '/quickstore',
@@ -87,6 +99,8 @@ export interface FileRoutesByFullPath {
   '/templates': typeof TemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/quickstore': typeof AuthenticatedQuickstoreRoute
+  '/buy/$id': typeof BuyIdRoute
+  '/template/$id': typeof TemplateIdRoute
   '/store/$projectId': typeof AuthenticatedStoreProjectIdRoute
 }
 export interface FileRoutesByTo {
@@ -99,6 +113,8 @@ export interface FileRoutesByTo {
   '/templates': typeof TemplatesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/quickstore': typeof AuthenticatedQuickstoreRoute
+  '/buy/$id': typeof BuyIdRoute
+  '/template/$id': typeof TemplateIdRoute
   '/store/$projectId': typeof AuthenticatedStoreProjectIdRoute
 }
 export interface FileRoutesById {
@@ -113,6 +129,8 @@ export interface FileRoutesById {
   '/templates': typeof TemplatesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/quickstore': typeof AuthenticatedQuickstoreRoute
+  '/buy/$id': typeof BuyIdRoute
+  '/template/$id': typeof TemplateIdRoute
   '/_authenticated/store/$projectId': typeof AuthenticatedStoreProjectIdRoute
 }
 export interface FileRouteTypes {
@@ -127,6 +145,8 @@ export interface FileRouteTypes {
     | '/templates'
     | '/dashboard'
     | '/quickstore'
+    | '/buy/$id'
+    | '/template/$id'
     | '/store/$projectId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -139,6 +159,8 @@ export interface FileRouteTypes {
     | '/templates'
     | '/dashboard'
     | '/quickstore'
+    | '/buy/$id'
+    | '/template/$id'
     | '/store/$projectId'
   id:
     | '__root__'
@@ -152,6 +174,8 @@ export interface FileRouteTypes {
     | '/templates'
     | '/_authenticated/dashboard'
     | '/_authenticated/quickstore'
+    | '/buy/$id'
+    | '/template/$id'
     | '/_authenticated/store/$projectId'
   fileRoutesById: FileRoutesById
 }
@@ -164,6 +188,8 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TemplatesRoute: typeof TemplatesRoute
+  BuyIdRoute: typeof BuyIdRoute
+  TemplateIdRoute: typeof TemplateIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -224,6 +250,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/template/$id': {
+      id: '/template/$id'
+      path: '/template/$id'
+      fullPath: '/template/$id'
+      preLoaderRoute: typeof TemplateIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/buy/$id': {
+      id: '/buy/$id'
+      path: '/buy/$id'
+      fullPath: '/buy/$id'
+      preLoaderRoute: typeof BuyIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/quickstore': {
       id: '/_authenticated/quickstore'
       path: '/quickstore'
@@ -272,6 +312,8 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TemplatesRoute: TemplatesRoute,
+  BuyIdRoute: BuyIdRoute,
+  TemplateIdRoute: TemplateIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

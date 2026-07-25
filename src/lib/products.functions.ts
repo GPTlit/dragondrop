@@ -2,21 +2,25 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function assertOwner(supabase: any, userId: string, projectId: string) {
+async function assertOwner(supabase: any, userId: string, projectId: string, email?: string) {
   const { data, error } = await supabase
     .from("projects")
-    .select("id,owner_id")
+    .select("id,owner_id,owner_email")
     .eq("id", projectId)
     .maybeSingle();
   if (error) throw new Error(error.message);
-  if (!data || data.owner_id !== userId) throw new Error("Not found");
+  if (!data) throw new Error("Not found");
+  const emailLc = (email ?? "").toLowerCase();
+  const ok = data.owner_id === userId
+    || (data.owner_email && data.owner_email.toLowerCase() === emailLc);
+  if (!ok) throw new Error("Not found");
 }
 
 export const listProducts = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ projectId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    await assertOwner(context.supabase, context.userId, data.projectId);
+    await assertOwner(context.supabase, context.userId, data.projectId, context.claims?.email as string | undefined);
     const { data: rows, error } = await context.supabase
       .from("products")
       .select("*")
@@ -41,7 +45,7 @@ export const upsertProduct = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => productInput.extend({ id: z.string().uuid().optional() }).parse(d))
   .handler(async ({ data, context }) => {
-    await assertOwner(context.supabase, context.userId, data.projectId);
+    await assertOwner(context.supabase, context.userId, data.projectId, context.claims?.email as string | undefined);
     const payload = {
       project_id: data.projectId,
       name: data.name,
@@ -66,7 +70,7 @@ export const deleteProduct = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ id: z.string().uuid(), projectId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    await assertOwner(context.supabase, context.userId, data.projectId);
+    await assertOwner(context.supabase, context.userId, data.projectId, context.claims?.email as string | undefined);
     const { error } = await context.supabase.from("products").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
@@ -82,8 +86,36 @@ export const getProject = createServerFn({ method: "GET" })
       .eq("id", data.id)
       .maybeSingle();
     if (error) throw new Error(error.message);
-    if (!row || row.owner_id !== context.userId) throw new Error("Not found");
+    if (!row) throw new Error("Not found");
+    const email = (context.claims?.email as string | undefined)?.toLowerCase() ?? "";
+    const isOwner = row.owner_id === context.userId
+      || (row.owner_email && row.owner_email.toLowerCase() === email);
+    if (!isOwner) throw new Error("Not found");
     return row;
+  });
+
+export const updateStoreMeta = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({
+      id: z.string().uuid(),
+      name: z.string().trim().min(1).max(80).optional(),
+      site_name: z.string().trim().min(1).max(80).optional(),
+      logo_url: z.string().url().max(1000).nullable().optional(),
+    }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await assertOwner(context.supabase, context.userId, data.id, context.claims?.email as string | undefined);
+    const { data: current } = await context.supabase
+      .from("projects").select("store_meta,name").eq("id", data.id).maybeSingle();
+    const meta = { ...((current?.store_meta as any) ?? {}) };
+    if (data.site_name !== undefined) meta.site_name = data.site_name;
+    if (data.logo_url !== undefined) meta.logo_url = data.logo_url;
+    const patch: any = { store_meta: meta };
+    if (data.name) patch.name = data.name;
+    const { error } = await context.supabase.from("projects").update(patch).eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
   });
 
 export const createQuickStore = createServerFn({ method: "POST" })
