@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { templateById, formatMRU, TEMPLATES } from "@/lib/templates";
+import { templateById, formatMRU, TEMPLATES, type StoreTemplate } from "@/lib/templates";
 import { TemplatePreviewCard } from "@/components/site/TemplatePreviewCard";
 import { SiteNav } from "@/components/site/SiteNav";
 import { SiteFooter } from "@/components/site/SiteFooter";
