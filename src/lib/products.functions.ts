@@ -2,14 +2,18 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function assertOwner(supabase: any, userId: string, projectId: string) {
+async function assertOwner(supabase: any, userId: string, projectId: string, email?: string) {
   const { data, error } = await supabase
     .from("projects")
-    .select("id,owner_id")
+    .select("id,owner_id,owner_email")
     .eq("id", projectId)
     .maybeSingle();
   if (error) throw new Error(error.message);
-  if (!data || data.owner_id !== userId) throw new Error("Not found");
+  if (!data) throw new Error("Not found");
+  const emailLc = (email ?? "").toLowerCase();
+  const ok = data.owner_id === userId
+    || (data.owner_email && data.owner_email.toLowerCase() === emailLc);
+  if (!ok) throw new Error("Not found");
 }
 
 export const listProducts = createServerFn({ method: "GET" })
