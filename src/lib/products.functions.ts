@@ -20,7 +20,7 @@ export const listProducts = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ projectId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    await assertOwner(context.supabase, context.userId, data.projectId);
+    await assertOwner(context.supabase, context.userId, data.projectId, context.claims?.email as string | undefined);
     const { data: rows, error } = await context.supabase
       .from("products")
       .select("*")
@@ -45,7 +45,7 @@ export const upsertProduct = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => productInput.extend({ id: z.string().uuid().optional() }).parse(d))
   .handler(async ({ data, context }) => {
-    await assertOwner(context.supabase, context.userId, data.projectId);
+    await assertOwner(context.supabase, context.userId, data.projectId, context.claims?.email as string | undefined);
     const payload = {
       project_id: data.projectId,
       name: data.name,
@@ -70,7 +70,7 @@ export const deleteProduct = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => z.object({ id: z.string().uuid(), projectId: z.string().uuid() }).parse(d))
   .handler(async ({ data, context }) => {
-    await assertOwner(context.supabase, context.userId, data.projectId);
+    await assertOwner(context.supabase, context.userId, data.projectId, context.claims?.email as string | undefined);
     const { error } = await context.supabase.from("products").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
@@ -105,7 +105,7 @@ export const updateStoreMeta = createServerFn({ method: "POST" })
     }).parse(d),
   )
   .handler(async ({ data, context }) => {
-    await assertOwner(context.supabase, context.userId, data.id);
+    await assertOwner(context.supabase, context.userId, data.id, context.claims?.email as string | undefined);
     const { data: current } = await context.supabase
       .from("projects").select("store_meta,name").eq("id", data.id).maybeSingle();
     const meta = { ...((current?.store_meta as any) ?? {}) };
