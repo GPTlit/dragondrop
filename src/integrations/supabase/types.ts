@@ -233,9 +233,12 @@ export type Database = {
           id: string
           is_published: boolean
           name: string
-          owner_id: string
+          owner_email: string | null
+          owner_id: string | null
           slug: string
           status: string
+          store_meta: Json
+          template_id: number | null
           theme: Json
           type: string
           updated_at: string
@@ -246,9 +249,12 @@ export type Database = {
           id?: string
           is_published?: boolean
           name: string
-          owner_id: string
+          owner_email?: string | null
+          owner_id?: string | null
           slug: string
           status?: string
+          store_meta?: Json
+          template_id?: number | null
           theme?: Json
           type?: string
           updated_at?: string
@@ -259,14 +265,76 @@ export type Database = {
           id?: string
           is_published?: boolean
           name?: string
-          owner_id?: string
+          owner_email?: string | null
+          owner_id?: string | null
           slug?: string
           status?: string
+          store_meta?: Json
+          template_id?: number | null
           theme?: Json
           type?: string
           updated_at?: string
         }
         Relationships: []
+      }
+      purchases: {
+        Row: {
+          buyer_code: string | null
+          buyer_email: string
+          buyer_name: string
+          buyer_phone: string | null
+          buyer_whatsapp: string | null
+          comments: string | null
+          created_at: string
+          id: string
+          payment_method: string
+          project_id: string | null
+          receipt_url: string | null
+          status: string
+          store_name: string
+          template_id: number
+        }
+        Insert: {
+          buyer_code?: string | null
+          buyer_email: string
+          buyer_name: string
+          buyer_phone?: string | null
+          buyer_whatsapp?: string | null
+          comments?: string | null
+          created_at?: string
+          id?: string
+          payment_method: string
+          project_id?: string | null
+          receipt_url?: string | null
+          status?: string
+          store_name: string
+          template_id: number
+        }
+        Update: {
+          buyer_code?: string | null
+          buyer_email?: string
+          buyer_name?: string
+          buyer_phone?: string | null
+          buyer_whatsapp?: string | null
+          comments?: string | null
+          created_at?: string
+          id?: string
+          payment_method?: string
+          project_id?: string | null
+          receipt_url?: string | null
+          status?: string
+          store_name?: string
+          template_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchases_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -300,6 +368,24 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      submit_purchase: {
+        Args: {
+          p_buyer_code: string
+          p_buyer_email: string
+          p_buyer_name: string
+          p_buyer_phone: string
+          p_buyer_whatsapp: string
+          p_comments: string
+          p_payment_method: string
+          p_receipt_url: string
+          p_store_name: string
+          p_template_id: number
+        }
+        Returns: {
+          project_id: string
+          purchase_id: string
+        }[]
       }
     }
     Enums: {
