@@ -111,7 +111,7 @@ function BuyPage() {
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
       toast.success("Purchase submitted — opening WhatsApp");
       window.open(url, "_blank");
-      navigate({ to: "/auth", search: { redirect: `/dashboard` } as any });
+      navigate({ to: "/auth" });
     },
     onError: (e: any) => toast.error(e?.message ?? "Something went wrong"),
   });
