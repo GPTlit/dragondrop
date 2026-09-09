@@ -151,40 +151,52 @@ export type Database = {
       }
       products: {
         Row: {
+          category: string
+          compare_at_cents: number | null
           created_at: string
           currency: string
           description: string | null
+          featured: boolean
           id: string
           images: Json
           name: string
           price_cents: number
           project_id: string
+          sku: string | null
           stock: number
           updated_at: string
           visible: boolean
         }
         Insert: {
+          category?: string
+          compare_at_cents?: number | null
           created_at?: string
           currency?: string
           description?: string | null
+          featured?: boolean
           id?: string
           images?: Json
           name: string
           price_cents?: number
           project_id: string
+          sku?: string | null
           stock?: number
           updated_at?: string
           visible?: boolean
         }
         Update: {
+          category?: string
+          compare_at_cents?: number | null
           created_at?: string
           currency?: string
           description?: string | null
+          featured?: boolean
           id?: string
           images?: Json
           name?: string
           price_cents?: number
           project_id?: string
+          sku?: string | null
           stock?: number
           updated_at?: string
           visible?: boolean
@@ -329,6 +341,62 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "purchases_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      store_orders: {
+        Row: {
+          address: string | null
+          created_at: string
+          currency: string
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string
+          id: string
+          items: Json
+          note: string | null
+          project_id: string
+          status: string
+          total_cents: number
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          currency?: string
+          customer_email?: string | null
+          customer_name: string
+          customer_phone: string
+          id?: string
+          items?: Json
+          note?: string | null
+          project_id: string
+          status?: string
+          total_cents?: number
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          currency?: string
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          items?: Json
+          note?: string | null
+          project_id?: string
+          status?: string
+          total_cents?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "store_orders_project_id_fkey"
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "projects"
